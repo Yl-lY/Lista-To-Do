@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MeuApp());
@@ -20,8 +21,14 @@ class _MeuAppState extends State<MeuApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 4, 8, 15),
         appBar: AppBar(
-          title: const Text('Lista de Afazeres'),
+          backgroundColor: const Color.fromARGB(255, 120, 111, 82),
+          title: Center(
+            child: Text('Lista de Afazeres',
+                style: GoogleFonts.montserrat(fontSize: 27)),
+          ),
+          foregroundColor: const Color.fromARGB(255, 239, 233, 244),
         ),
         body: Column(
           children: [
@@ -34,19 +41,22 @@ class _MeuAppState extends State<MeuApp> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         IconButton(
-                          icon: Icon(Icons.edit, color:Colors.blue[600]),
+                          icon: Icon(Icons.edit, color: Colors.blue[600]),
                           tooltip: 'Editar',
                           onPressed: () {
                             setState(() {
                               showDialog(
+                                barrierColor: const Color.fromARGB(52, 0, 0, 0),
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('Confirmar Ação'),
+                                    title: const Text('Confirmar Ação',
+                                        textAlign: TextAlign.center),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        const Text('Deseja editar o item?'),
+                                        const Text('Deseja editar o item?',
+                                            textAlign: TextAlign.center),
                                         TextField(
                                           controller: controladorModal,
                                           decoration: const InputDecoration(
@@ -57,20 +67,32 @@ class _MeuAppState extends State<MeuApp> {
                                       ],
                                     ),
                                     actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(); 
-                                        },
-                                        child: const Text('Cancelar'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _tarefas[index].descricao = controladorModal.text; 
-                                            Navigator.of(context).pop(); 
-                                          });
-                                        },
-                                        child: const Text('Confirmar'),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Cancelar'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              if (controladorModal
+                                                  .text.isEmpty) {
+                                                return;
+                                              }
+                                              setState(() {
+                                                _tarefas[index].descricao =
+                                                    controladorModal.text;
+                                                controladorModal.clear();
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                            child: const Text('Confirmar'),
+                                          )
+                                        ],
                                       ),
                                     ],
                                   );
@@ -80,52 +102,73 @@ class _MeuAppState extends State<MeuApp> {
                           },
                         ),
                         IconButton(
-                          icon: Icon( Icons.delete_rounded, color: Colors.red[600]),
-                          tooltip: '${_tarefas[index].status}',
+                          icon: Icon(Icons.delete_rounded,
+                              color: Colors.red[600]),
+                          tooltip: 'Excluir',
                           onPressed: () {
                             setState(() {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('Confirmar Ação'),
-                                    content: const Text('Deseja excluir o item da lista?'),
+                                    title: const Text('Confirmar Ação',
+                                        textAlign: TextAlign.center),
+                                    content: const Text(
+                                        'Deseja excluir o item da lista?',
+                                        textAlign: TextAlign.center),
                                     actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(); 
-                                        },
-                                        child: const Text('Cancelar'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _tarefas.remove(_tarefas[index]); 
-                                            Navigator.of(context).pop(); 
-                                          });
-                                        },
-                                        child: const Text('Confirmar'),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Cancelar'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _tarefas
+                                                    .remove(_tarefas[index]);
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                            child: const Text('Confirmar'),
+                                          )
+                                        ],
                                       ),
                                     ],
                                   );
                                 },
                               );
-                              
                             });
                           },
                         ),
                         IconButton(
-                          icon: Icon( _tarefas[index].status ? Icons.check_box : Icons.check_box_outline_blank, color: _tarefas[index].status ? Colors.green[600] : Colors.black),
-                          tooltip: '${_tarefas[index].status}',
+                          icon: Icon(
+                              _tarefas[index].status
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              color: _tarefas[index].status
+                                  ? Colors.green[600]
+                                  : Colors.brown[800]),
+                          tooltip:
+                              _tarefas[index].status ? 'Feito' : 'Não feito',
                           onPressed: () {
                             setState(() {
-                              _tarefas[index].status ? _tarefas[index].status = false : _tarefas[index].status = true;
+                              _tarefas[index].status
+                                  ? _tarefas[index].status = false
+                                  : _tarefas[index].status = true;
                             });
                           },
                         )
                       ],
                     ),
-                    title: Text(_tarefas[index].descricao),
+                    title: Text(_tarefas[index].descricao,
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 239, 233, 244))),
                   );
                 },
               ),
@@ -136,6 +179,8 @@ class _MeuAppState extends State<MeuApp> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 239, 233, 244)),
                       controller: controlador,
                       decoration: const InputDecoration(
                         hintText: 'Descrição',
@@ -148,7 +193,7 @@ class _MeuAppState extends State<MeuApp> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: const ButtonStyle(
-                      fixedSize: WidgetStatePropertyAll(Size(200, 60)),
+                      fixedSize: MaterialStatePropertyAll(Size(200, 60)),
                     ),
                     child: const Text('Adicionar Tarefa'),
                     onPressed: () {
